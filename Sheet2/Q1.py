@@ -30,13 +30,19 @@ u3 = z[:,2]
 
 
 #real solution
-#y = 2 - np.exp(-t)
+Reu1 = np.exp(-t)
+Reu2 = np.exp(-t) * (2 + t)
+Reu3 = np.exp(-t) * (3 + 2*t + 0.5*(t**2))
+
+#Difference
+Difu1 = np.absolute(Reu1 - u1)
+Difu2 = np.absolute(Reu2 - u2)
+Difu3 = np.absolute(Reu3 - u3)
 
 # plot results
-plt.plot(t,u1,'r-',linewidth=2,label='u1')
-plt.plot(t,u2,'b-',linewidth=2,label='u2')
-plt.plot(t,u3,'g-',linewidth=2,label='u3')
-#plt.plot(t,y,'b--',linewidth=2,label='Real')
+plt.plot(t,Difu1,'r-',linewidth=2,label='u1')
+plt.plot(t,Difu2,'b-',linewidth=2,label='u2')
+plt.plot(t,Difu3,'g-',linewidth=2,label='u3')
 plt.xlabel('time')
-plt.ylabel('y(t)')
+plt.ylabel('Difference')
 plt.show()
