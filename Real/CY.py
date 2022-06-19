@@ -16,11 +16,12 @@ def get_finDiff_matrices(n):
     return d1, d2
 
 H = 1
-y = np.linspace(0, H, num=n)
+number = 50
+y = np.linspace(0, H, num=number)
 
 uthing = -0.5 * y**2 - H * 0.5 * y
 
-def Carreau_Yasuda(uprev, eps, eta0=2, eta_inf=1, llambda=1, n=50, a=1, N=2, alpha = 0.5):
+def Carreau_Yasuda(uprev, eps, n, eta0=2, eta_inf=1, llambda=1, a=1, N=2, alpha = 0.5):
     
     Result = np.ones(n)
     Result[0] = 0
@@ -53,9 +54,16 @@ def Carreau_Yasuda(uprev, eps, eta0=2, eta_inf=1, llambda=1, n=50, a=1, N=2, alp
 
     return unew
 
-U = Carreau_Yasuda(uprev = uthing, eps=1e-5, alpha = 0.9)
+lambdas = np.linspace(1, 10, 10)
+U = []
+for i in lambdas:
+    U.append(Carreau_Yasuda(uprev = uthing, eps=1e-5, alpha = 0.9, n = number, N = i))
+    print("Done", i)
+#U = Carreau_Yasuda(uprev = uthing, eps=1e-5, alpha = 0.8, n = number, llambda = lambdas)
+print("Finished Everything")
 
-plt.plot(y, U,'r-',linewidth=2,label='u')
+for col in range(len(U)):
+    plt.plot(y, U[col])
 plt.xlabel('Y')
 plt.ylabel('Velocity')
 plt.show()
