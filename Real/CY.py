@@ -24,51 +24,40 @@ for i in range(1, n-1):
     d1[i, i-1] = -1
     d1[i, i+1] = 1
 
-etamat = np.diag(eta)
-deta = np.matmul(d1, eta)
-detamat = np.diag(deta)
-
-B = np.matmul(detamat, d1)
-A = np.matmul(etamat, d2)
-
-Mat = A + B
-Mat[0,0] = 1
-Mat[2,2] = 1
 
 Result = np.array([0,1,0])
 
-
-
-u=np.linalg.solve(Mat, Result)
-print(u)
 
 eps = 0.1
 diff = eps + 1
 
 uprev = y**2
+def Carreau-Yasuda(eta0=2, eta_inf=1, llambda=1, uprev, n=50, a=1, N=2, eps, alpha = 0.5):
+    diff = eps+1
+    while diff > eps:
+        #Get eta, calculate the derivative and set the values along the diagonal
+        eta = eta_inf + (eta0 - eta_inf) * (1 + (llambda * uprev)**a)**((N-1)/a)
+        etamat = np.diag(eta)
+        deta = np.matmul(d1, eta)
+        detamat = np.diag(deta)
+        
+        #The two halves of the matrix we get
+        B = np.matmul(detamat, d1)
+        A = np.matmul(etamat, d2)
+        
+        #Actually make the matrix
+        Mat = A + B
+        Mat[0,0] = 1
+        Mat[2,2] = 1
+        
+        #Find our uhat
+        uhat=np.linalg.solve(Mat, Result)
+        
+        unew = alpha * uprev + (1-alpha) * uhat
+        diff = np.linalg.norm(unew - uprev)
+        uprev = unew
+        print(unew, diff)
+    return unew
 
-while diff > eps:
-    #Get eta, calculate the derivative and set the values along the diagonal
-    eta = eta_inf + (eta0 - eta_inf) * (1 + (llambda * uprev)**a)**((N-1)/a)
-    etamat = np.diag(eta)
-    deta = np.matmul(d1, eta)
-    detamat = np.diag(deta)
-    
-    #The two halves of the matrix we get
-    B = np.matmul(detamat, d1)
-    A = np.matmul(etamat, d2)
-    
-    #Actually make the matrix
-    Mat = A + B
-    Mat[0,0] = 1
-    Mat[2,2] = 1
-    
-    #Find our uhat
-    uhat=np.linalg.solve(Mat, Result)
-    
-    unew = alpha * uprev + (1-alpha) * uhat
-    diff = np.linalg.norm(unew - uprev)
-    uprev = unew
-    print(unew, diff)
-print(unew)
+
 #Mat = A + B
