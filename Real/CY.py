@@ -24,10 +24,18 @@ for i in range(1, n-1):
     d1[i, i-1] = -1
     d1[i, i+1] = 1
 
+etamat = np.diag(eta)
+deta = np.matmul(d1, eta)
+detamat = np.diag(deta)
 
-B = np.matmul(np.matmul(d1, eta), d1)
-A = np.matmul(eta, d2)
+B = np.matmul(detamat, d1)
+A = np.matmul(etamat, d2)
 
-print(B)
-#print(B)
-#Mat = A + B
+Mat = A + B
+Mat[0,0] = 1
+Mat[2,2] = 1
+
+Result = np.array([0,1,0])
+
+u=np.linalg.solve(Mat, Result)
+print(u)
