@@ -39,3 +39,29 @@ Result = np.array([0,1,0])
 
 u=np.linalg.solve(Mat, Result)
 print(u)
+
+
+while diff > eps:
+    #Get eta, calculate the derivative and set the values along the diagonal
+    eta = eta_inf + (eta0 - eta_inf) * (1 + (llambda * uprev)**a)**((n-1)/2)
+    etamat = np.diag(eta)
+    deta = np.matmul(d1, eta)
+    detamat = np.diag(deta)
+    
+    #The two halves of the matrix we get
+    B = np.matmul(detamat, d1)
+    A = np.matmul(etamat, d2)
+    
+    #Actually make the matrix
+    Mat = A + B
+    Mat[0,0] = 1
+    Mat[2,2] = 1
+    
+    #Find our uhat
+    uhat=np.linalg.solve(Mat, Result)
+    
+    #get difference and calculate new u
+    unew = alpha * uprev + (1-alpha) * uhat
+    diff = np.linalg.norm(unew - uprev)
+    uprev = unew
+#Mat = A + B
